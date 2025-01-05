@@ -7,6 +7,7 @@ On utilisera donc la formule de steinhart-hart valable sur toute plage de tempé
 ![image](https://github.com/user-attachments/assets/fdafac64-3cde-4b5e-a884-0318a2c7d04a) https://fr.wikipedia.org/wiki/Relation_de_Steinhart-Hart
 Cette page wikipédia fournit un code python permettant à partir de 3 mesures de référence de déterminer vos coefficients.
 Pour mon anneau :
+
 #define COEFA -0.0005832612868399646
 
 #define COEFB 0.0004757002048313418
@@ -18,6 +19,7 @@ A vérifier avec votre matériel.
 
 La régulation est faite avec un aservissement PID fournissant une sortie PMW afin d'attaquer un module MOSFET pour faire varier la puissance de chauffe de la résistance de l'anneau.
 Les paramètres de l'asservissement PID sont à renseigner dans celle lige de code :
+
 double Kp=80, Ki=2, Kd=5;
 
 Le montage doit être alimenté en 12V (pour l'anneau chauffant) et du coup, un "buck converter" est utilisé pour l'alimentation 5V de l'arduino nano, evitant de devoir brancher l'usb en dehors de la programmation / debug.
