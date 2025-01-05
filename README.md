@@ -1,6 +1,9 @@
 Système de régulation d'un anneau chauffant Celestron (type C8) à base d'un arduino nano (V3)
 =============================================================================================
 
+Ce projet est libre d'utilisation pour un usage privé mais aucune utilisation dans un but commercial n'est permise.
+-------------------------------------------------------------------------------------------------------------------
+
 Ce projet à pour but d'assurer la régulation en température des anneaux chauffants Celestron en urilisant leur sonde de température intégrée.
 La sonde de température est une thermistance NTC10K et au vu des temépratures de fonctionnement visées (plutot en hiver), les formules de type steinhart simplifiées ne sont pas adaptées var souvent fournies pour une plage de température entre 25°C et 85°C
 On utilisera donc la formule de steinhart-hart valable sur toute plage de température et nécessitant les 3 coefficents A , B et C.
