@@ -8,8 +8,11 @@ On utilisera donc la formule de steinhart-hart valable sur toute plage de tempé
 Cette page wikipédia fournit un code python permettant à partir de 3 mesures de référence de déterminer vos coefficients.
 Pour mon anneau :
 #define COEFA -0.0005832612868399646
+
 #define COEFB 0.0004757002048313418
+
 #define COEFC -5.705419094644155e-07
+
 
 A vérifier avec votre matériel.
 
