@@ -44,9 +44,11 @@ La liste des composants :
 
 1 Arduino nano V3 : 
 1 Buck Converter 5V : 
-1 résistance 
-1 ecran OLED
-.... à continuer
+1 résistance 10 K ohms
+1 ecran OLED SSD1306
+1 Driver Mosfet 15A
+1 capteur de temp/hum BME 280
+.... à continuer avec les référence et liens
 
 Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout neuf mais testé sur platine d'essai.
 
