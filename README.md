@@ -28,16 +28,20 @@ double Kp=80, Ki=2, Kd=5;
 Le montage doit être alimenté en 12V (pour l'anneau chauffant) et du coup, un "buck converter" est utilisé pour l'alimentation 5V de l'arduino nano, evitant de devoir brancher l'usb en dehors de la programmation / debug.
 
 Voici le schema :
+
 ![Schematic_ArduDewRing_2025-01-04](https://github.com/user-attachments/assets/86b4d2e3-259c-4b84-9b6a-969513d49328)
 
 Le PCB :
 ATTENTION : Le PCB utilise un buck converter Pin inverted ce qui n'est pas forcément le cas de celui que vous aurez et qui n'était pas le cas du mien. Du coup la sérigraphie du PCB est à inverser (Out est en fait In et In est Out). J'ai réglé ce soucis avec mon buck converter en soudant les pins dessous, ce qui m'a permis de le monter comme sur l'emplacement sérigraphié pour ne pas qu'il dépasse du PCB. Vérifiez vos tension avant de souder ou mettre les composants.
+
 ![PCB_PCB_ArduDewRing_2025-01-04](https://github.com/user-attachments/assets/d0534c7c-d148-40f8-9264-90c69c90cd5c)
 
 Les fichiers Gerber :
+
 [Gerber_ArduDewRing_PCB_ArduDewRing_2025-01-04.zip](https://github.com/user-attachments/files/18311245/Gerber_ArduDewRing_PCB_ArduDewRing_2025-01-04.zip)
 
 Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout neuf mais testé sur platine d'essai.
+
 ![1736101971722](https://github.com/user-attachments/assets/10be5ab0-a420-4b10-8341-86ba13789231)
 
 Voila les photos du montage :
