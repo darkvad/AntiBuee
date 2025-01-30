@@ -31,6 +31,7 @@ Voici le schema :
 ![Schematic_ArduDewRing_2025-01-04](https://github.com/user-attachments/assets/86b4d2e3-259c-4b84-9b6a-969513d49328)
 
 Le PCB :
+ATTENTION : Le PCB utilise un buck converter Pin inverted ce qui n'est pas forcément le cas de celui que vous aurez et qui n'était pas le cas du mien. Du coup la sérigraphie du PCB est à inverser (Out est en fait In et In est Out). J'ai réglé ce soucis avec mon buck converter en soudant les pins dessous, ce qui m'a permis de le monter comme sur l'emplacement sérigraphié pour ne pas qu'il dépasse du PCB. Vérifiez vos tension avant de souder ou mettre les composants.
 ![PCB_PCB_ArduDewRing_2025-01-04](https://github.com/user-attachments/assets/d0534c7c-d148-40f8-9264-90c69c90cd5c)
 
 Les fichiers Gerber :
@@ -38,6 +39,16 @@ Les fichiers Gerber :
 
 Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout neuf mais testé sur platine d'essai.
 ![1736101971722](https://github.com/user-attachments/assets/10be5ab0-a420-4b10-8341-86ba13789231)
+
+Voila les photos du montage :
+![montage1](https://github.com/user-attachments/assets/65ccac36-21ac-4f2b-8d2d-97b409ef0054)
+![montage2](https://github.com/user-attachments/assets/e56ccad6-faf8-4cc1-98dd-1c81d97fa710)
+![montage3](https://github.com/user-attachments/assets/ed833d0d-bb2a-4e40-b7d2-0d191381f2a8)
+![montage4](https://github.com/user-attachments/assets/e0123c9d-20ff-44b8-a1e8-697bf34ef38b)
+![montage5](https://github.com/user-attachments/assets/5bc768f6-1e6d-497b-b6f7-0f034e12dcf3)
+![montage6](https://github.com/user-attachments/assets/748572ba-3b81-4121-828b-c39694fa0288)
+![montage7](https://github.com/user-attachments/assets/8cb4f7e1-f0de-4078-85a1-818ded59084a)
+
 
 Ce projet est libre d'utilisation pour un usage privé mais aucune utilisation dans un but commercial n'est permise.
 
