@@ -42,16 +42,26 @@ Les fichiers Gerber :
 
 La liste des composants :
 
-1 Arduino nano V3 par exemple https://fr.aliexpress.com/item/1005007539665675.html?spm=a2g0o.order_list.order_list_main.159.6caf5e5bU7I341&gatewayAdapt=glo2fra)
+1 Arduino nano V3 par exemple https://fr.aliexpress.com/item/1005007539665675.html?spm=a2g0o.order_list.order_list_main.159.6caf5e5bU7I341&gatewayAdapt=glo2fra
+
 1 Buck Converter 5V ici : https://fr.aliexpress.com/item/33017156248.html?spm=a2g0o.order_list.order_list_main.114.6caf5e5bU7I341&gatewayAdapt=glo2fra
+
 1 résistance 10 K ohms
+
 1 ecran OLED SSD1306 en blanc au cas où vous vouliez mettre un film rouge dessus : https://fr.aliexpress.com/item/1005006373062872.html?spm=a2g0o.order_list.order_list_main.139.6caf5e5bU7I341&gatewayAdapt=glo2fra
+
 Option Film rouge : https://fr.aliexpress.com/item/1005005637966631.html?spm=a2g0o.order_list.order_list_main.109.6caf5e5bU7I341&gatewayAdapt=glo2fra
+
 1 Driver Mosfet 15A : https://www.amazon.fr/dp/B0BWY5B2P9?ref=ppx_yo2ov_dt_b_fed_asin_title
+
 1 capteur de temp/hum BME 280 : https://www.amazon.fr/temp%C3%A9rature-dhumidit%C3%A9-num%C3%A9rique-pr%C3%A9cision-Interface/dp/B0DP8S6YV2/ref=sr_1_9?crid=2XVLH1F5V96W6&dib=eyJ2IjoiMSJ9.nrYpDqucI_kP7N6thFzRynl7uhsUO-UfSALdW2Zp-TIBNkmdXXHew0y9_Rr99fFFoY5-4xbWyXMddWt3CgsTNRb-WjdGGC2yzgnVFgKXM63qW2oNHVOrXX4FsuBuJNKO0zEDqDEzrPjuxsJ90zeQQKiph3Ur7jTlcXV04zo0BWkgsX8HQNZIBAt2pPME8zUCNk-5yOC_RyhFxQEpk08w_1txe8Ogu820OG8rPfiMuP_amuQuNWXGZ2R_K405AML7-b03GoS3Awn5EiQMN2psgJ4_dGMspOe3doRaSHjNa6d4AOlI7IMTi9yJNO1Npu3pDTu4qdV7FFyZkWaLrqqMB9ox5dEsOcDeA9jT_cMpjnVwphAzVYkZZIzzbZC5A5T3JFMF5tmiq89_UJqlTIM37oaiZLRAmRmqAkQss7FSEuUt4YE3C2uqCYA77NzOPybr.yccOjqGoMhdAawBIOFQ5v2NRr8-Lz1qKntZ8ac3A1Fk&dib_tag=se&keywords=bme280&qid=1738268687&sprefix=BME%2Caps%2C120&sr=8-9
+
 1 Connecteur alim 12v par exemple https://fr.aliexpress.com/item/1005007404274787.html?spm=a2g0o.order_list.order_list_main.23.6caf5e5bU7I341&gatewayAdapt=glo2fra
+
 1 Connecteur jack 3,5 (ou 2.5 si vous avez la rallonge male male 2.5 - 2.5) par exemple https://www.amazon.fr/dp/B01MTNOEOT?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1
+
 1 Connecteur RCA comme ceux ci : https://www.amazon.fr/dp/B09TPL4TV5?ref=ppx_yo2ov_dt_b_fed_asin_title
+
 
 PS : Les liens correspondent à ce que j'avais en stock de commandes passées ou ce que j'ai commandé pour l'occasion. Ils sont à titre indicatif , achetez où bon vous semble ;)
 
