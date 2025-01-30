@@ -69,7 +69,7 @@ Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout ne
 
 ![1736101971722](https://github.com/user-attachments/assets/10be5ab0-a420-4b10-8341-86ba13789231)
 
-Voila les photos du montage :
+Voila les photos du montage (perso je préfère mettre des supports  pour les composants afin de pouvoir les changer facilement en cas de problème, surtout sur les premières versions) :
 
 ![montage1](https://github.com/user-attachments/assets/65ccac36-21ac-4f2b-8d2d-97b409ef0054)
 ![montage2](https://github.com/user-attachments/assets/e56ccad6-faf8-4cc1-98dd-1c81d97fa710)
