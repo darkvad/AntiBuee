@@ -40,6 +40,14 @@ Les fichiers Gerber :
 
 [Gerber_ArduDewRing_PCB_ArduDewRing_2025-01-04.zip](https://github.com/user-attachments/files/18311245/Gerber_ArduDewRing_PCB_ArduDewRing_2025-01-04.zip)
 
+La liste des composants :
+
+1 Arduino nano V3 : 
+1 Buck Converter 5V : 
+1 résistance 
+1 ecran OLED
+.... à continuer
+
 Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout neuf mais testé sur platine d'essai.
 
 ![1736101971722](https://github.com/user-attachments/assets/10be5ab0-a420-4b10-8341-86ba13789231)
