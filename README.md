@@ -65,6 +65,8 @@ Option Film rouge : https://fr.aliexpress.com/item/1005005637966631.html?spm=a2g
 
 PS : Les liens correspondent à ce que j'avais en stock de commandes passées ou ce que j'ai commandé pour l'occasion. Ils sont à titre indicatif , achetez où bon vous semble ;)
 
+Les fichiers stl pour un boitier en impression 3D sont dispo dans le dossier 3D_Case. J'y aussi mis les fichiers openscad si vous voulez revoir certains détails.
+
 Et une photo du prototype ... A ce jour, j'attend les PCB, le projet est tout neuf mais testé sur platine d'essai.
 
 ![1736101971722](https://github.com/user-attachments/assets/10be5ab0-a420-4b10-8341-86ba13789231)
