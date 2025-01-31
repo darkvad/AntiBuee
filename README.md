@@ -81,6 +81,13 @@ Voila les photos du montage (perso je préfère mettre des supports  pour les co
 ![montage6](https://github.com/user-attachments/assets/748572ba-3b81-4121-828b-c39694fa0288)
 ![montage7](https://github.com/user-attachments/assets/8cb4f7e1-f0de-4078-85a1-818ded59084a)
 
+Et la mise en boite :
+
+![1000013894](https://github.com/user-attachments/assets/94cd48f9-9965-4a95-a3f0-85b038bc74d3)
+![1000013893](https://github.com/user-attachments/assets/3ec2b365-089b-4d87-85ab-4e79c8439894)
+![1000013892](https://github.com/user-attachments/assets/5bc30843-cb8d-49f7-892d-bebb6ff120f7)
+![1000013891](https://github.com/user-attachments/assets/a3fb980b-cd7d-40e7-a326-09bbb88e1a84)
+
 
 Ce projet est libre d'utilisation pour un usage privé mais aucune utilisation dans un but commercial n'est permise.
 
