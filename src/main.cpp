@@ -81,6 +81,9 @@ const unsigned char logo [576] PROGMEM = {
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
+// correction de température pour le capteur BME à l'intérieur du boitier
+#define deltaTemp 2
+
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
@@ -107,6 +110,7 @@ float steinhart_hart (float Resistance) {
 
 void readValues() {
   temperature = bme.readTemperature();
+  temperature = temperature - deltaTemp;
   pression = (bme.readPressure() / 100.0F);
   altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
   humidite = bme.readHumidity();
