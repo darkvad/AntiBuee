@@ -12,6 +12,7 @@ enum Order {
   FULL = 0x36,
   REGUL = 0x37,
   STATUS = 0x38,
+  SAVE = 0x39,
 };
 
 typedef enum Order Order;

@@ -6,6 +6,7 @@
 #include <Adafruit_SSD1306.h>
 #include <PID_v1.h>
 #include <math.h>
+#include <EEPROM.h>
 #include "order.h"
 #include "slave.h"
 
@@ -49,6 +50,8 @@ const unsigned char logo [576] PROGMEM = {
 	0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x03, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00
 };
+
+//const char diese[2] PROGMEM = "#";
 
 // SPDX-FileCopyrightText: 2011 Limor Fried/ladyada for Adafruit Industries
 //
@@ -108,13 +111,65 @@ bool is_connected = false; ///< True if the connection with the master is availa
 uint8_t delta_temp = deltaTemp;
 uint8_t set_offset = setOffset;
 bool is_full = false;
+double set_pwm = 0;
+float coefa = COEFA;
+float coefb = COEFB;
+float coefc = COEFC;
+const uint16_t tag_eeprom PROGMEM = 0xABCD;
+uint16_t tag_eeprom_lu = 0x0000;
+
 
 float steinhart = 0.0f;
+
+// Pas d'utilisation d'une structure car je ne sais pas si l'update vérifie
+// chaque octet de la structure avant d'écrire ou la totalité
+// ceci afin d'être sur d'économiser des cycles d'écriture
+void save_eeprom () {
+  int eeAddress = 0;
+  EEPROM.put(eeAddress,tag_eeprom);
+  eeAddress+= sizeof(uint16_t);
+  EEPROM.put(eeAddress,coefa);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,coefb);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,coefc);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,set_pwm);
+  eeAddress+= sizeof(double);
+  EEPROM.put(eeAddress,is_full);
+  eeAddress+= sizeof(bool);
+  EEPROM.put(eeAddress,delta_temp);
+  eeAddress+= sizeof(uint8_t);
+  EEPROM.put(eeAddress,set_offset);
+  eeAddress+= sizeof(uint8_t);
+}
+
+void read_eeprom () {
+  int eeAddress = 0;
+  EEPROM.get(eeAddress,tag_eeprom_lu);
+  eeAddress+= sizeof(uint16_t);
+  if (tag_eeprom != tag_eeprom_lu) return;
+  EEPROM.get(eeAddress,coefa);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,coefb);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,coefc);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,set_pwm);
+  eeAddress+= sizeof(double);
+  EEPROM.get(eeAddress,is_full);
+  eeAddress+= sizeof(bool);
+  EEPROM.get(eeAddress,delta_temp);
+  eeAddress+= sizeof(uint8_t);
+  EEPROM.get(eeAddress,set_offset);
+  eeAddress+= sizeof(uint8_t);
+}
+
 
 float steinhart_hart (float Resistance) {
   float temp;
   
-  temp = (1 / (COEFA + (COEFB * log(Resistance)) + (COEFC * pow((log(Resistance)),3) ))) - 273.15;
+  temp = (1 / (coefa + (coefb * log(Resistance)) + (coefc * pow((log(Resistance)),3) ))) - 273.15;
 
   return temp;
 }
@@ -134,6 +189,13 @@ void update_setpoint_offset(uint8_t offset)
 
 void full()
 {
+  set_pwm = 255;
+  is_full = true;
+}
+
+void full(uint16_t mypwm)
+{
+  set_pwm = mypwm;
   is_full = true;
 }
 
@@ -158,15 +220,21 @@ void write_order(enum Order myOrder)
 void get_messages_from_serial()
 {
   char szF1[8] = "";
+  char szF2[8] = "";
+  char szF3[8] = "";
+  char szF4[8] = "";
+  char szF5[8] = "";
+  char szF6[8] = "";
+  char szF7[8] = "";
   if(Serial.available() > 0)
   {
     // The first byte received is the instruction
     Order order_received = read_order();
     if(DEBUG_PROTO)
     {
-      Serial.print("order_received:");
+      Serial.print(F("order_received:"));
       Serial.print(order_received);
-      Serial.println("-");
+      Serial.println(F("-"));
     }
 
     if(order_received == HELLO)
@@ -240,31 +308,42 @@ void get_messages_from_serial()
 //            Serial.println("STATUS");
             write_order(STATUS);
           }
-          Serial.write("[",1);
           dtostrf( temperature, -2, 2, szF1 );
+          dtostrf( humidite, -2, 2, szF2 );
+          dtostrf( steinhart, -2, 2, szF3 );
+          dtostrf( rosee, -2, 2, szF4 );
+          dtostrf( Output, -2, 2, szF5 );
+          itoa(delta_temp, szF6, 10);
+          itoa(set_offset, szF7, 10);
+          //snprintf(buf1, 50, "TE:%s-HE:%s-TT:%s-TR:%s-PWM:%s", szF1, szF2, szF3, szF4, szF5);
+          Serial.write("[",1);
           Serial.write(szF1,strlen(szF1));
           Serial.write("#",1);
-          dtostrf( humidite, -2, 2, szF1 );
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF2,strlen(szF2));
           Serial.write("#",1);
-          dtostrf( steinhart, -2, 2, szF1 );
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF3,strlen(szF3));
           Serial.write("#",1);
-          dtostrf( rosee, -2, 2, szF1 );
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF4,strlen(szF4));
           Serial.write("#",1);
-          dtostrf( Output, -2, 2, szF1 );
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF5,strlen(szF5));
           Serial.write("#",1);
-          itoa(delta_temp, szF1, 10);
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF6,strlen(szF6));
           Serial.write("#",1);
-          itoa(set_offset, szF1, 10);
-          Serial.write(szF1,strlen(szF1));
+          Serial.write(szF7,strlen(szF7));
           Serial.write("]",1);
 
           //printValues(0);
           break;
+        }
+        case SAVE:
+        {
+          save_eeprom();
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("SAVE");
+            write_order(SAVE);
+          }
+         break;
         }
   			// Unknown order
   			default:
@@ -308,28 +387,28 @@ void printValues(float steinhart) {
   if (DEBUG)  {
     Serial.print(F("Température = "));
     Serial.print(temperature);
-    Serial.println(" *C");
+    Serial.println(F(" *C"));
     
     // Convert temperature to Fahrenheit
     Serial.print(F("Température = "));
     Serial.print(1.8 * temperature + 32);
-    Serial.println(" *F");
+    Serial.println(F(" *F"));
     
     Serial.print(F("Pression Atm = "));
     Serial.print(pression);
-    Serial.println(" hPa");
+    Serial.println(F(" hPa"));
     
     Serial.print(F("Altitude Approx. = "));
     Serial.print(altitude);
-    Serial.println(" m");
+    Serial.println(F(" m"));
     
     Serial.print(F("Humidité = "));
     Serial.print(humidite);
-    Serial.println(" %");
+    Serial.println(F(" %"));
 
     Serial.print(F("Point de rosée = "));
     Serial.print(rosee);
-    Serial.println(" *C");
+    Serial.println(F(" *C"));
 
     Serial.println();
   }
@@ -371,7 +450,8 @@ void setup(void) {
   analogReference(EXTERNAL);
   pinMode(TOPBRIDGE, OUTPUT);    // sets the digital pin 13 as output
   digitalWrite(TOPBRIDGE, LOW);
-   
+  
+  
   if (DEBUG)  {
     Serial.println(F("Avant Init BME280"));
   }
@@ -381,6 +461,7 @@ void setup(void) {
     if (DEBUG)  {
       Serial.println(F("Could not find a valid BME280 sensor, check wiring!"));
     }
+    //Serial.write(0x37);
     while (1);
   }
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
@@ -416,6 +497,8 @@ void setup(void) {
   myPID.SetMode(AUTOMATIC);
 
   pinMode(PIN_OUTPUT, OUTPUT);
+
+  //read_eeprom();
 
   delay(2000);
 
@@ -471,7 +554,7 @@ void loop(void) {
   if (DEBUG)  {
     Serial.print(F("Temperature : ")); 
     Serial.print(steinhart);
-    Serial.println(" *C");
+    Serial.println(F(" *C"));
 
     Serial.println(F("* Mesures BME280 *"));
   } 
@@ -479,7 +562,7 @@ void loop(void) {
   Input = steinhart;
   Setpoint = max(rosee + set_offset, temperature);
   if (is_full) {
-    Output = 255;
+    Output = set_pwm;
     analogWrite(PIN_OUTPUT, Output);
   } else {
     myPID.Compute();

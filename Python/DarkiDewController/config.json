@@ -1,0 +1,14 @@
+{
+  "port": "COM8",
+  "baudrate": "9600",
+  "delta_temp": 0,
+  "dew_offset": 0,
+  "mode": 0,
+  "update_interval": 120,
+  "log_directory": "logs",
+  "log_format": 0,
+  "log_level": 0,
+  "timeout": 20,
+  "reconnect_attempts": 3,
+  "auto_status": true
+}
