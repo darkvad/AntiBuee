@@ -108,13 +108,19 @@ bool is_connected = false; ///< True if the connection with the master is availa
 uint8_t delta_temp = deltaTemp;
 uint8_t set_offset = setOffset;
 bool is_full = false;
+double set_pwm = 0;
+float coefa = COEFA;
+float coefb = COEFB;
+float coefc = COEFC;
+const uint16_t tag_eeprom PROGMEM = 0xABCD;
+uint16_t tag_eeprom_lu = 0x0000;
 
 float steinhart = 0.0f;
 
 float steinhart_hart (float Resistance) {
   float temp;
   
-  temp = (1 / (COEFA + (COEFB * log(Resistance)) + (COEFC * pow((log(Resistance)),3) ))) - 273.15;
+  temp = (1 / (coefa + (coefb * log(Resistance)) + (coefc * pow((log(Resistance)),3) ))) - 273.15;
 
   return temp;
 }
@@ -134,6 +140,13 @@ void update_setpoint_offset(uint8_t offset)
 
 void full()
 {
+  set_pwm = 255;
+  is_full = true;
+}
+
+void full(uint16_t mypwm)
+{
+  set_pwm = mypwm;
   is_full = true;
 }
 
@@ -308,28 +321,28 @@ void printValues(float steinhart) {
   if (DEBUG)  {
     Serial.print(F("Température = "));
     Serial.print(temperature);
-    Serial.println(" *C");
+    Serial.println(F(" *C"));
     
     // Convert temperature to Fahrenheit
     Serial.print(F("Température = "));
     Serial.print(1.8 * temperature + 32);
-    Serial.println(" *F");
+    Serial.println(F(" *F"));
     
     Serial.print(F("Pression Atm = "));
     Serial.print(pression);
-    Serial.println(" hPa");
+    Serial.println(F(" hPa"));
     
     Serial.print(F("Altitude Approx. = "));
     Serial.print(altitude);
-    Serial.println(" m");
+    Serial.println(F(" m"));
     
     Serial.print(F("Humidité = "));
     Serial.print(humidite);
-    Serial.println(" %");
+    Serial.println(F(" %"));
 
     Serial.print(F("Point de rosée = "));
     Serial.print(rosee);
-    Serial.println(" *C");
+    Serial.println(F(" *C"));
 
     Serial.println();
   }
@@ -479,7 +492,7 @@ void loop(void) {
   Input = steinhart;
   Setpoint = max(rosee + set_offset, temperature);
   if (is_full) {
-    Output = 255;
+    Output = set_pwm;
     analogWrite(PIN_OUTPUT, Output);
   } else {
     myPID.Compute();
