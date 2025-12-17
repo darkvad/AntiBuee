@@ -6,6 +6,9 @@
 #include <Adafruit_SSD1306.h>
 #include <PID_v1.h>
 #include <math.h>
+#include "order.h"
+#include "slave.h"
+
 
 const unsigned char logo [576] PROGMEM = {
 	// 'pngegg, 66x64px
@@ -83,6 +86,7 @@ const unsigned char logo [576] PROGMEM = {
 
 // correction de température pour le capteur BME à l'intérieur du boitier
 #define deltaTemp 2
+#define setOffset 3
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
@@ -100,6 +104,13 @@ double Setpoint, Input, Output;
 double Kp=80, Ki=2, Kd=5;
 PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
+bool is_connected = false; ///< True if the connection with the master is available
+uint8_t delta_temp = deltaTemp;
+uint8_t set_offset = setOffset;
+bool is_full = false;
+
+float steinhart = 0.0f;
+
 float steinhart_hart (float Resistance) {
   float temp;
   
@@ -108,9 +119,188 @@ float steinhart_hart (float Resistance) {
   return temp;
 }
 
+void update_delta_temp(uint8_t delta)
+{
+
+  delta_temp = delta - 0x30;
+//  Serial.println(delta_temp);
+}
+
+void update_setpoint_offset(uint8_t offset)
+{
+  set_offset = offset - 0x30;
+//  Serial.println(set_offset);
+}
+
+void full()
+{
+  is_full = true;
+}
+
+void regul()
+{
+  is_full = false;
+}
+
+uint8_t read_i8()
+{
+	wait_for_bytes(1, 100); // Wait for 1 byte with a timeout of 100 ms
+  return (uint8_t) Serial.read();
+}
+
+void write_order(enum Order myOrder)
+{
+	uint8_t* Order = (uint8_t*) &myOrder;
+  Serial.write(Order, sizeof(uint8_t));
+}
+
+
+void get_messages_from_serial()
+{
+  char szF1[8] = "";
+  char szF2[8] = "";
+  char szF3[8] = "";
+  char szF4[8] = "";
+  char szF5[8] = "";
+  char szF6[8] = "";
+  char szF7[8] = "";
+  if(Serial.available() > 0)
+  {
+    // The first byte received is the instruction
+    Order order_received = read_order();
+    if(DEBUG_PROTO)
+    {
+      Serial.print("order_received:");
+      Serial.print(order_received);
+      Serial.println("-");
+    }
+
+    if(order_received == HELLO)
+    {
+      // If the cards haven't say hello, check the connection
+      if(!is_connected)
+      {
+        is_connected = true;
+        write_order(HELLO);
+      }
+      else
+      {
+        // If we are already connected do not send "hello" to avoid infinite loop
+        write_order(ALREADY_CONNECTED);
+      }
+    }
+    else if(order_received == ALREADY_CONNECTED)
+    {
+      is_connected = true;
+    }
+    else
+    {
+      switch(order_received)
+      {
+        case FULL:
+        {
+          full();
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("FULL");
+            write_order(FULL);
+          }
+         break;
+        }
+        case REGUL:
+        {
+          regul();
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("REGUL");
+            write_order(REGUL);
+          }
+          break;
+        }
+        case DELTA:
+        {
+          // between 0 and 20
+          update_delta_temp(read_i8());
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("DELTA");
+            write_order(DELTA);
+          }
+          break;
+        }
+        case OFFSET:
+        {
+          // between 0 and 20
+          update_setpoint_offset(read_i8());
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("OFFSET");
+            write_order(OFFSET);
+          }
+          break;
+        }
+        case STATUS:
+        {
+          if(DEBUG_PROTO)
+          {
+//            Serial.println("STATUS");
+            write_order(STATUS);
+          }
+          dtostrf( temperature, -2, 2, szF1 );
+          dtostrf( humidite, -2, 2, szF2 );
+          dtostrf( steinhart, -2, 2, szF3 );
+          dtostrf( rosee, -2, 2, szF4 );
+          dtostrf( Output, -2, 2, szF5 );
+          itoa(delta_temp, szF6, 10);
+          itoa(set_offset, szF7, 10);
+          //snprintf(buf1, 50, "TE:%s-HE:%s-TT:%s-TR:%s-PWM:%s", szF1, szF2, szF3, szF4, szF5);
+          Serial.write("[",1);
+          Serial.write(szF1,strlen(szF1));
+          Serial.write("#",1);
+          Serial.write(szF2,strlen(szF2));
+          Serial.write("#",1);
+          Serial.write(szF3,strlen(szF3));
+          Serial.write("#",1);
+          Serial.write(szF4,strlen(szF4));
+          Serial.write("#",1);
+          Serial.write(szF5,strlen(szF5));
+          Serial.write("#",1);
+          Serial.write(szF6,strlen(szF6));
+          Serial.write("#",1);
+          Serial.write(szF7,strlen(szF7));
+          Serial.write("]",1);
+
+          //printValues(0);
+          break;
+        }
+  			// Unknown order
+  			default:
+//          Serial.println("ERROR");
+          write_order(ERROR);
+  				return;
+      }
+    }
+//      Serial.println("RECEIVED");
+    write_order(RECEIVED); // Confirm the reception
+  }
+}
+
+
+Order read_order()
+{
+	return (Order) Serial.read();
+}
+
+void wait_for_bytes(int num_bytes, unsigned long timeout)
+{
+	unsigned long startTime = millis();
+	//Wait for incoming bytes or exit if timeout
+	while ((Serial.available() < num_bytes) && (millis() - startTime < timeout)){}
+}
+
 void readValues() {
   temperature = bme.readTemperature();
-  temperature = temperature - deltaTemp;
+  temperature = temperature - delta_temp;
   pression = (bme.readPressure() / 100.0F);
   altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
   humidite = bme.readHumidity();
@@ -122,32 +312,34 @@ void readValues() {
 }
 
 void printValues(float steinhart) {
-  Serial.print(F("Température = "));
-  Serial.print(temperature);
-  Serial.println(" *C");
-  
-  // Convert temperature to Fahrenheit
-  Serial.print(F("Température = "));
-  Serial.print(1.8 * temperature + 32);
-  Serial.println(" *F");
-  
-  Serial.print(F("Pression Atm = "));
-  Serial.print(pression);
-  Serial.println(" hPa");
-  
-  Serial.print(F("Altitude Approx. = "));
-  Serial.print(altitude);
-  Serial.println(" m");
-  
-  Serial.print(F("Humidité = "));
-  Serial.print(humidite);
-  Serial.println(" %");
+  if (DEBUG)  {
+    Serial.print(F("Température = "));
+    Serial.print(temperature);
+    Serial.println(" *C");
+    
+    // Convert temperature to Fahrenheit
+    Serial.print(F("Température = "));
+    Serial.print(1.8 * temperature + 32);
+    Serial.println(" *F");
+    
+    Serial.print(F("Pression Atm = "));
+    Serial.print(pression);
+    Serial.println(" hPa");
+    
+    Serial.print(F("Altitude Approx. = "));
+    Serial.print(altitude);
+    Serial.println(" m");
+    
+    Serial.print(F("Humidité = "));
+    Serial.print(humidite);
+    Serial.println(" %");
 
-  Serial.print(F("Point de rosée = "));
-  Serial.print(rosee);
-  Serial.println(" *C");
+    Serial.print(F("Point de rosée = "));
+    Serial.print(rosee);
+    Serial.println(" *C");
 
-  Serial.println();
+    Serial.println();
+  }
 
   display.clearDisplay();
   display.setTextSize(1);      // Normal 1:1 pixel scale
@@ -187,16 +379,22 @@ void setup(void) {
   pinMode(TOPBRIDGE, OUTPUT);    // sets the digital pin 13 as output
   digitalWrite(TOPBRIDGE, LOW);
    
-  Serial.println(F("Avant Init BME280"));
+  if (DEBUG)  {
+    Serial.println(F("Avant Init BME280"));
+  }
 
   status = bme.begin(BMP280_ADDRESS); 
   if (!status) {
-    Serial.println(F("Could not find a valid BME280 sensor, check wiring!"));
+    if (DEBUG)  {
+      Serial.println(F("Could not find a valid BME280 sensor, check wiring!"));
+    }
     while (1);
   }
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
-    Serial.println(F("SSD1306 allocation failed"));
+    if (DEBUG)  {
+      Serial.println(F("SSD1306 allocation failed"));
+    }
     //for(;;); // Don't proceed, loop forever
   }
 
@@ -234,6 +432,8 @@ void loop(void) {
   uint8_t i;
   float average;
 
+  get_messages_from_serial();
+
   // take N samples in a row, with a slight delay
   digitalWrite(TOPBRIDGE, HIGH); // set top of the resistor bridge to High
   for (i=0; i< NUMSAMPLES; i++) {
@@ -249,16 +449,19 @@ void loop(void) {
   }
   average /= NUMSAMPLES;
 
-  Serial.print(F("Average analog reading ")); 
-  Serial.println(average);
+  if (DEBUG)  {
+    Serial.print(F("Average analog reading ")); 
+    Serial.println(average);
+  }
   
   // convert the value to resistance
   average = 1023 / average - 1;
   average = SERIESRESISTOR / average;
-  Serial.println(F("* Thermistor resistance *")); 
-  Serial.println(average);
+  if (DEBUG)  {
+    Serial.println(F("* Thermistor resistance *")); 
+    Serial.println(average);
+  }
 
-  float steinhart;
 /*
   steinhart = average / THERMISTORNOMINAL;     // (R/Ro)
   steinhart = log(steinhart);                  // ln(R/Ro)
@@ -272,16 +475,24 @@ void loop(void) {
   Serial.println(" *C");
 */
   steinhart = steinhart_hart(average);
-  Serial.print(F("Temperature : ")); 
-  Serial.print(steinhart);
-  Serial.println(" *C");
+  if (DEBUG)  {
+    Serial.print(F("Temperature : ")); 
+    Serial.print(steinhart);
+    Serial.println(" *C");
 
-  Serial.println(F("* Mesures BME280 *")); 
+    Serial.println(F("* Mesures BME280 *"));
+  } 
   readValues();
   Input = steinhart;
-  Setpoint = min(rosee + 2, temperature);
-  myPID.Compute();
-  analogWrite(PIN_OUTPUT, Output);
+  Setpoint = max(rosee + set_offset, temperature);
+  if (is_full) {
+    Output = 255;
+    analogWrite(PIN_OUTPUT, Output);
+  } else {
+    myPID.Compute();
+    analogWrite(PIN_OUTPUT, Output);
+  }  
+
 
   printValues(steinhart);
   delay(3000);
