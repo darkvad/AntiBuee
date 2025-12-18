@@ -33,7 +33,7 @@ class SerialWorker(QObject):
         super().__init__()
         self.serial_port = None
         self.running = False
-        self.baudrate = 9600
+        self.baudrate = 19200
         self.protocol = ProtocolHandler()
         self.data_logger = DataLogger()
         
@@ -70,7 +70,7 @@ class SerialWorker(QObject):
         """Log avec l'état courant"""
         self.logger.log(level, message, extra={'state': self.status_parsing_state})
     
-    def connect(self, port, baudrate=9600):
+    def connect(self, port, baudrate=19200):
         """Connexion simple"""
         try:
             self.serial_port = serial.Serial(
@@ -129,16 +129,20 @@ class SerialWorker(QObject):
             self._log_with_state(f"Erreur OFFSET: {e}", logging.ERROR)
             return False
     
-    def send_mode(self, is_maxi=True):
+    def send_mode(self, is_maxi=True, value=255):
         """Envoie SET MODE"""
-        cmd = self.protocol.create_mode_command(is_maxi)
+        cmd = self.protocol.create_mode_command(is_maxi, value)
         cmd_name = "FULL" if is_maxi else "REGUL"
         self._send_command(cmd, cmd_name)
     
     def request_status(self):
         """Envoie STATUS avec parsing d'état"""
         self._send_command(b'\x38', "STATUS")
-    
+
+    def send_save(self):
+        """Envoie SAVE avec parsing d'état"""
+        self._send_command(b'\x39', "SAVE")
+
     def _send_command(self, cmd_bytes, cmd_name):
         """Envoie une commande"""
         if not self.serial_port or not self.serial_port.is_open:
@@ -247,7 +251,7 @@ class SerialWorker(QObject):
             self._process_status_response_smart()
         elif self.current_command == "HELLO":
             self._process_hello_response()
-        else:  # DELTA, OFFSET, FULL, REGUL
+        else:  # DELTA, OFFSET, FULL, REGUL, SAVE
             self._process_simple_response()
     
     def _process_status_response_smart(self):
@@ -705,7 +709,7 @@ class MainWindow(QMainWindow):
         connection_layout.addWidget(QLabel("Baudrate:"), 0, 2)
         self.baudrate_combo = QComboBox()
         self.baudrate_combo.addItems(["9600", "19200", "38400", "57600", "115200"])
-        self.baudrate_combo.setCurrentText("9600")
+        self.baudrate_combo.setCurrentText("19200")
         connection_layout.addWidget(self.baudrate_combo, 0, 3)
         
         # Boutons
@@ -728,6 +732,11 @@ class MainWindow(QMainWindow):
         hello_btn = QPushButton("HELLO (0x30)")
         hello_btn.clicked.connect(lambda: self.serial_worker.send_hello())
         commands_layout.addWidget(hello_btn, 0, 0)
+        
+        # SAVE
+        eeprom_btn = QPushButton("SAVE EEPROM (0x39)")
+        eeprom_btn.clicked.connect(lambda: self.serial_worker.send_save())
+        commands_layout.addWidget(eeprom_btn, 0, 2)
         
         # Delta Temp
         commands_layout.addWidget(QLabel("Delta Temp (0-9):"), 1, 0)
@@ -761,11 +770,18 @@ class MainWindow(QMainWindow):
         mode_btn.clicked.connect(self.send_mode_command)
         commands_layout.addWidget(mode_btn, 3, 2)
         
+        # PWM Fixe
+        commands_layout.addWidget(QLabel("Puissance pour mode maxi (0-100 %):"), 4, 0)
+        self.power_spin = QSpinBox()
+        self.power_spin.setRange(0, 100)
+        self.power_spin.setValue(100)
+        commands_layout.addWidget(self.power_spin, 4, 1)
+         
         # STATUS
         status_btn = QPushButton("STATUS (0x38)")
         status_btn.clicked.connect(lambda: self.serial_worker.request_status())
         status_btn.setStyleSheet("QPushButton { background-color: #4CAF50; color: white; }")
-        commands_layout.addWidget(status_btn, 4, 0, 1, 3)
+        commands_layout.addWidget(status_btn, 5, 0, 1, 3)
         
         commands_group.setLayout(commands_layout)
         
@@ -1266,6 +1282,13 @@ class MainWindow(QMainWindow):
                 self.offset_spin.setValue(offset_value)
                 self.offset_spin.blockSignals(False)
         
+        if 'pwm' in data:
+            pwm_value = int(((data['pwm']) * 100) // 255)
+            if pwm_value != self.power_spin.value() and not self.power_spin.hasFocus():
+                self.power_spin.blockSignals(True)
+                self.power_spin.setValue(pwm_value)
+                self.power_spin.blockSignals(False)
+        
         # Ajouter le timestamp
         self.timestamps.append(timestamp)
         
@@ -1305,7 +1328,8 @@ class MainWindow(QMainWindow):
     def send_mode_command(self):
         """Envoie la commande SET MODE"""
         is_maxi = self.mode_combo.currentText().startswith("Maxi")
-        self.serial_worker.send_mode(is_maxi)
+        power = self.power_spin.value()
+        self.serial_worker.send_mode(is_maxi, power)
     
     def auto_request_status(self):
         """Requête automatique de statut"""
@@ -1411,6 +1435,7 @@ class MainWindow(QMainWindow):
             'delta_temp': self.delta_spin.value(),
             'dew_offset': self.offset_spin.value(),
             'mode': self.mode_combo.currentIndex(),
+            'power': self.power_spin.value(),
             'update_interval': self.update_interval.value(),
             'log_directory': self.log_dir_edit.text(),
             'log_format': self.log_format_combo.currentIndex(),
@@ -1444,10 +1469,11 @@ class MainWindow(QMainWindow):
                     config = json.load(f)
                 
                 # Appliquer la configuration
-                self.baudrate_combo.setCurrentText(str(config.get('baudrate', '9600')))
+                self.baudrate_combo.setCurrentText(str(config.get('baudrate', '19200')))
                 self.delta_spin.setValue(config.get('delta_temp', 0))
                 self.offset_spin.setValue(config.get('dew_offset', 0))
                 self.mode_combo.setCurrentIndex(config.get('mode', 0))
+                self.power_spin.setValue(config.get('power', 100))
                 self.update_interval.setValue(config.get('update_interval', 5))
                 self.log_dir_edit.setText(config.get('log_directory', 'logs'))
                 self.log_format_combo.setCurrentIndex(config.get('log_format', 0))

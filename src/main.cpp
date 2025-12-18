@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include <EEPROM.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 #include <Adafruit_GFX.h>
@@ -112,10 +113,52 @@ double set_pwm = 0;
 float coefa = COEFA;
 float coefb = COEFB;
 float coefc = COEFC;
-const uint16_t tag_eeprom PROGMEM = 0xABCD;
-uint16_t tag_eeprom_lu = 0x0000;
+const uint8_t tag_eeprom PROGMEM = 0xAB;
+uint8_t tag_eeprom_lu = 0x00;
 
 float steinhart = 0.0f;
+
+void save_eeprom () {
+  int eeAddress = 0;
+  EEPROM.update(eeAddress,tag_eeprom);
+  eeAddress+= sizeof(uint16_t);
+  EEPROM.put(eeAddress,coefa);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,coefb);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,coefc);
+  eeAddress+= sizeof(float);
+  EEPROM.put(eeAddress,set_pwm);
+  eeAddress+= sizeof(double);
+  EEPROM.put(eeAddress,is_full);
+  eeAddress+= sizeof(bool);
+  EEPROM.update(eeAddress,delta_temp);
+  eeAddress+= sizeof(uint8_t);
+  EEPROM.update(eeAddress,set_offset);
+  eeAddress+= sizeof(uint8_t);
+
+}
+
+void read_eeprom () {
+  int eeAddress = 0;
+  EEPROM.get(eeAddress,tag_eeprom_lu);
+  eeAddress+= sizeof(uint16_t);
+  if (tag_eeprom != tag_eeprom_lu) return;
+  EEPROM.get(eeAddress,coefa);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,coefb);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,coefc);
+  eeAddress+= sizeof(float);
+  EEPROM.get(eeAddress,set_pwm);
+  eeAddress+= sizeof(double);
+  EEPROM.get(eeAddress,is_full);
+  eeAddress+= sizeof(bool);
+  EEPROM.get(eeAddress,delta_temp);
+  eeAddress+= sizeof(uint8_t);
+  EEPROM.get(eeAddress,set_offset);
+  eeAddress+= sizeof(uint8_t);
+}
 
 float steinhart_hart (float Resistance) {
   float temp;
@@ -152,6 +195,7 @@ void full(uint16_t mypwm)
 
 void regul()
 {
+  set_pwm = 0;
   is_full = false;
 }
 
@@ -175,12 +219,6 @@ void get_messages_from_serial()
   {
     // The first byte received is the instruction
     Order order_received = read_order();
-    if(DEBUG_PROTO)
-    {
-      Serial.print("order_received:");
-      Serial.print(order_received);
-      Serial.println("-");
-    }
 
     if(order_received == HELLO)
     {
@@ -206,53 +244,28 @@ void get_messages_from_serial()
       {
         case FULL:
         {
-          full();
-          if(DEBUG_PROTO)
-          {
-//            Serial.println("FULL");
-            write_order(FULL);
-          }
-         break;
+          full(read_i8());
+          break;
         }
         case REGUL:
         {
           regul();
-          if(DEBUG_PROTO)
-          {
-//            Serial.println("REGUL");
-            write_order(REGUL);
-          }
           break;
         }
         case DELTA:
         {
           // between 0 and 20
           update_delta_temp(read_i8());
-          if(DEBUG_PROTO)
-          {
-//            Serial.println("DELTA");
-            write_order(DELTA);
-          }
           break;
         }
         case OFFSET:
         {
           // between 0 and 20
           update_setpoint_offset(read_i8());
-          if(DEBUG_PROTO)
-          {
-//            Serial.println("OFFSET");
-            write_order(OFFSET);
-          }
           break;
         }
         case STATUS:
         {
-          if(DEBUG_PROTO)
-          {
-//            Serial.println("STATUS");
-            write_order(STATUS);
-          }
           Serial.write("[",1);
           dtostrf( temperature, -2, 2, szF1 );
           Serial.write(szF1,strlen(szF1));
@@ -276,7 +289,11 @@ void get_messages_from_serial()
           Serial.write(szF1,strlen(szF1));
           Serial.write("]",1);
 
-          //printValues(0);
+          break;
+        }
+        case SAVE:
+        {
+          save_eeprom();
           break;
         }
   			// Unknown order
@@ -380,7 +397,7 @@ void printValues(float steinhart) {
 
 void setup(void) {
   bool status;
-  Serial.begin(9600);
+  Serial.begin(19200);
   analogReference(EXTERNAL);
   pinMode(TOPBRIDGE, OUTPUT);    // sets the digital pin 13 as output
   digitalWrite(TOPBRIDGE, LOW);
@@ -421,6 +438,7 @@ void setup(void) {
   display.println(F("Mesure en cours"));
   display.display();
 
+  read_eeprom();
   //initialize the variables we're linked to
   Input = 40;
   Setpoint = 27;

@@ -53,10 +53,15 @@ class ProtocolHandler:
         else:
             raise ValueError(f"Valeur offset invalide: {value}. Doit être entre 0 et 9")
     
-    def create_mode_command(self, is_maxi=True):
+    def create_mode_command(self, is_maxi=True, value=100):
         """Crée la commande SET MODE"""
         if is_maxi:
-            return bytes([Command.FULL])
+            if 0 <= value <= 100:
+                value_byte = ((255 * value) // 100)
+                return bytes([Command.FULL, value_byte])
+            else:
+                raise ValueError(f"Valeur puissance invalide: {value}. Doit être entre 0 et 100")
+            #return bytes([Command.FULL])
         else:
             return bytes([Command.REGUL])
     
