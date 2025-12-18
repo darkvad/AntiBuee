@@ -20,9 +20,6 @@ Pour mon anneau :
 
 A vérifier avec votre matériel.
 
-> [!CAUTION]
-> La puissance qui passe dans le module MOSFET peut faire fondre les pistes du CI si gravé en standard. Plutôt que de payer cher un PCB avec des pistes de cuivre non standard (plus épaisses), j'ai choisi au final de cabler l'alimentation 12v et la sortie PWM directement sue les borniers des Mosfet et j'ai tordu les pattes correspondantes pour ne pas les mettre dans le support.
-
 > [!IMPORTANT]
 > Le montage produit de la chaleur et donc, le BME280 mis à l'intérieur du boitier risque d'avoir ses mesures de température et d'huumidité faussées.
 > Je conseille de le déporter avec un cablage à l'extérieur et loin d'une source de chaleur
