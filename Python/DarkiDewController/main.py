@@ -848,8 +848,8 @@ class MainWindow(QMainWindow):
         # Intervalle de mise à jour
         controls_layout.addWidget(QLabel("Intervalle STATUS:"))
         self.update_interval = QSpinBox()
-        self.update_interval.setRange(1, 120)
-        self.update_interval.setValue(120)
+        self.update_interval.setRange(1, 30)
+        self.update_interval.setValue(30)
         self.update_interval.setSuffix(" s")
         self.update_interval.valueChanged.connect(self.update_status_interval)
         controls_layout.addWidget(self.update_interval)
@@ -1015,7 +1015,7 @@ class MainWindow(QMainWindow):
         
         layout.addWidget(proto_group)
         layout.addWidget(save_group)
-        layout.addWidget(delays_group)
+#        layout.addWidget(delays_group)
         layout.addStretch()
         
         self.tab_widget.addTab(config_tab, "Configuration")
@@ -1474,7 +1474,7 @@ class MainWindow(QMainWindow):
                 self.offset_spin.setValue(config.get('dew_offset', 0))
                 self.mode_combo.setCurrentIndex(config.get('mode', 0))
                 self.power_spin.setValue(config.get('power', 100))
-                self.update_interval.setValue(config.get('update_interval', 5))
+                self.update_interval.setValue(config.get('update_interval', 30))
                 self.log_dir_edit.setText(config.get('log_directory', 'logs'))
                 self.log_format_combo.setCurrentIndex(config.get('log_format', 0))
                 self.log_level_combo.setCurrentIndex(config.get('log_level', 1))

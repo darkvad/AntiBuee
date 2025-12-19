@@ -1,0 +1,66 @@
+15:18:48.220 - STATE:INIT - SerialWorker corrigé initialisé
+15:18:48.422 - STATE:WAITING_START - Démarrage lecture
+15:18:48.423 - STATE:WAITING_START - Arrêt lecture
+15:19:28.526 - STATE:WAITING_START - Démarrage lecture
+15:19:38.527 - STATE:WAITING_START - Envoi HELLO après démarrage
+15:19:38.628 - STATE:IDLE - Envoi HELLO: 30
+15:19:39.793 - STATE:IDLE - Reçu 2 octets: 3035...
+15:19:39.794 - STATE:IDLE - Buffer: 3035...
+15:19:39.795 - STATE:IDLE - HELLO: Première connexion
+15:19:43.629 - STATE:IDLE - Envoi STATUS après démarrage
+15:19:43.730 - STATE:WAITING_START - Envoi STATUS: 38
+15:19:46.474 - STATE:WAITING_START - Reçu 13 octets: 5b32332e32362334352e393123...
+15:19:46.475 - STATE:WAITING_START - Buffer: 5b32332e32362334352e393123...
+15:19:46.475 - STATE:WAITING_START - Buffer ASCII: [23.26#45.91#...
+15:19:46.476 - STATE:WAITING_START - Début '[' détecté
+15:19:46.486 - STATE:IN_DATA - Reçu 23 octets: 2d34372e32312331302e3937233132372e303023312333...
+15:19:46.486 - STATE:IN_DATA - Buffer: 5b32332e32362334352e3931232d34372e32312331302e3937233132372e303023312333...
+15:19:46.487 - STATE:IN_DATA - Buffer ASCII: [23.26#45.91#-47.21#10.97#127.00#1#3...
+15:19:46.497 - STATE:IN_DATA - Reçu 2 octets: 5d35...
+15:19:46.498 - STATE:IN_DATA - Buffer: 5b32332e32362334352e3931232d34372e32312331302e3937233132372e3030233123335d35...
+15:19:46.498 - STATE:IN_DATA - Buffer ASCII: [23.26#45.91#-47.21#10.97#127.00#1#3]5...
+15:19:46.498 - STATE:IN_DATA - Fin ']' détectée à la position 36
+15:19:46.499 - STATE:IN_DATA - ACK 0x35 détecté après ']'
+15:19:46.499 - STATE:IN_DATA - Données STATUS brutes: 23.26#45.91#-47.21#10.97#127.00#1#3
+15:19:46.499 - STATE:IN_DATA - STATUS parsé: {'temperature': 23.26, 'humidity': 45.91, 'tube_temperature': -47.21, 'dew_point': 10.97, 'pwm': 127.0, 'delta_temp': 1, 'dew_offset': 3}
+15:19:58.628 - STATE:WAITING_START - Envoi STATUS: 38
+15:19:59.832 - STATE:WAITING_START - Reçu 18 octets: 5b32332e32372334352e3834232d34362e37...
+15:19:59.832 - STATE:WAITING_START - Buffer: 5b32332e32372334352e3834232d34362e37...
+15:19:59.833 - STATE:WAITING_START - Buffer ASCII: [23.27#45.84#-46.7...
+15:19:59.833 - STATE:WAITING_START - Début '[' détecté
+15:19:59.844 - STATE:IN_DATA - Reçu 20 octets: 352331302e3936233132372e3030233123335d35...
+15:19:59.845 - STATE:IN_DATA - Buffer: 5b32332e32372334352e3834232d34362e37352331302e3936233132372e3030233123335d35...
+15:19:59.845 - STATE:IN_DATA - Buffer ASCII: [23.27#45.84#-46.75#10.96#127.00#1#3]5...
+15:19:59.845 - STATE:IN_DATA - Fin ']' détectée à la position 36
+15:19:59.846 - STATE:IN_DATA - ACK 0x35 détecté après ']'
+15:19:59.846 - STATE:IN_DATA - Données STATUS brutes: 23.27#45.84#-46.75#10.96#127.00#1#3
+15:19:59.846 - STATE:IN_DATA - STATUS parsé: {'temperature': 23.27, 'humidity': 45.84, 'tube_temperature': -46.75, 'dew_point': 10.96, 'pwm': 127.0, 'delta_temp': 1, 'dew_offset': 3}
+15:20:21.555 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:22.555 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:23.556 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:24.557 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:25.558 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:26.559 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:27.560 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:28.561 - STATE:IDLE - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:28.621 - STATE:WAITING_START - Envoi STATUS: 38
+15:20:28.622 - STATE:WAITING_START - Erreur envoi STATUS: WriteFile failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:29.562 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:30.563 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:31.564 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:32.565 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:33.566 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:34.567 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:35.568 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:36.569 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:37.570 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:38.572 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:39.573 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:40.574 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:41.575 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:42.576 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:43.576 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:44.578 - STATE:WAITING_START - Erreur lecture: ClearCommError failed (PermissionError(13, 'Accès refusé.', None, 5))
+15:20:44.658 - STATE:WAITING_START - Déconnexion
+15:20:45.579 - STATE:WAITING_START - Arrêt lecture
+15:20:48.845 - STATE:WAITING_START - Déconnexion

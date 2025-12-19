@@ -173,11 +173,13 @@ class MultiPlotWidget(QWidget):
         self.plots['tube_temperature'] = RealTimePlot("Température Tube", "°C", 'orange')
         self.plots['dew_point'] = RealTimePlot("Point de Rosée", "°C", 'blue')
         self.plots['humidity'] = RealTimePlot("Humidité", "%", 'green')
+        self.plots['pwm'] = RealTimePlot("Puissance PWM", "", 'purple')
         
         temp_layout.addWidget(self.plots['temperature'], 0, 0)
         temp_layout.addWidget(self.plots['tube_temperature'], 0, 1)
         temp_layout.addWidget(self.plots['dew_point'], 1, 0)
         temp_layout.addWidget(self.plots['humidity'], 1, 1)
+        temp_layout.addWidget(self.plots['pwm'], 2, 0, 1,1)
         
         self.tab_widget.addTab(temp_tab, "Températures")
         
@@ -185,13 +187,13 @@ class MultiPlotWidget(QWidget):
         other_tab = QWidget()
         other_layout = QGridLayout(other_tab)
         
-        self.plots['humidity'] = RealTimePlot("Humidité", "%", 'green')
-        self.plots['pwm'] = RealTimePlot("Puissance PWM", "", 'purple')
+        #self.plots['humidity'] = RealTimePlot("Humidité", "%", 'green')
+        #☼self.plots['pwm'] = RealTimePlot("Puissance PWM", "", 'purple')
         self.plots['delta_temp'] = RealTimePlot("Delta Temp", "", 'cyan')
         self.plots['dew_offset'] = RealTimePlot("Offset Rosée", "", 'magenta')
         
-        other_layout.addWidget(self.plots['humidity'], 0, 0)
-        other_layout.addWidget(self.plots['pwm'], 0, 1)
+        #other_layout.addWidget(self.plots['humidity'], 0, 0)
+        #other_layout.addWidget(self.plots['pwm'], 0, 1)
         other_layout.addWidget(self.plots['delta_temp'], 1, 0)
         other_layout.addWidget(self.plots['dew_offset'], 1, 1)
         
