@@ -775,7 +775,16 @@ class MainWindow(QMainWindow):
         self.power_spin = QSpinBox()
         self.power_spin.setRange(0, 100)
         self.power_spin.setValue(100)
-        commands_layout.addWidget(self.power_spin, 4, 1)
+
+        self.power_slider = QSlider(Qt.Orientation.Horizontal)
+        self.power_slider.setValue(100)
+        self.power_slider.setRange(0,100)
+        self.power_slider.setTickInterval(10)
+        self.power_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.power_slider.valueChanged.connect(self.power_spin.setValue)
+        self.power_spin.valueChanged.connect(self.power_slider.setValue)
+        commands_layout.addWidget(self.power_slider, 4, 1)
+        commands_layout.addWidget(self.power_spin, 4, 2)
          
         # STATUS
         status_btn = QPushButton("STATUS (0x38)")

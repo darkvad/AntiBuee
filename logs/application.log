@@ -573,3 +573,33 @@
 2025-12-19 15:20:45,579 - SerialWorker - INFO - Arrêt lecture
 2025-12-19 15:20:48,845 - SerialWorker - INFO - Déconnexion
 2025-12-19 15:20:48,845 - __main__ - INFO - Déconnecté
+2025-12-19 22:11:30,194 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:11:30,568 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:11:30,569 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:11:39,656 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:11:39,657 - __main__ - INFO - Déconnecté
+2025-12-19 22:12:06,396 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:12:06,864 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:12:06,865 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:12:50,796 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:12:50,798 - __main__ - INFO - Déconnecté
+2025-12-19 22:12:52,361 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:12:52,804 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:12:52,806 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:13:09,485 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:13:09,486 - __main__ - INFO - Déconnecté
+2025-12-19 22:13:29,690 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:13:30,119 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:13:30,122 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:13:35,264 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:13:35,266 - __main__ - INFO - Déconnecté
+2025-12-19 22:15:08,127 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:15:08,509 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:15:08,511 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:15:16,569 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:15:16,571 - __main__ - INFO - Déconnecté
+2025-12-19 22:42:49,586 - SerialWorker - INFO - SerialWorker corrigé initialisé
+2025-12-19 22:42:50,451 - SerialWorker - INFO - Démarrage lecture
+2025-12-19 22:42:50,454 - SerialWorker - INFO - Arrêt lecture
+2025-12-19 22:43:06,565 - SerialWorker - INFO - Déconnexion
+2025-12-19 22:43:06,567 - __main__ - INFO - Déconnecté
