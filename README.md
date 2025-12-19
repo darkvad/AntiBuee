@@ -5,7 +5,7 @@ Ce projet est libre d'utilisation pour un usage privé mais aucune utilisation d
 -------------------------------------------------------------------------------------------------------------------
 
 Ce projet à pour but d'assurer la régulation en température des anneaux chauffants Celestron en urilisant leur sonde de température intégrée.
-La sonde de température est une thermistance NTC10K et au vu des temépratures de fonctionnement visées (plutot en hiver), les formules de type steinhart simplifiées ne sont pas adaptées var souvent fournies pour une plage de température entre 25°C et 85°C
+La sonde de température est une thermistance NTC10K et au vu des temépratures de fonctionnement visées (plutot en hiver), les formules de type steinhart simplifiées ne sont pas adaptées car souvent fournies pour une plage de température entre 25°C et 85°C
 On utilisera donc la formule de steinhart-hart valable sur toute plage de température et nécessitant les 3 coefficents A , B et C.
 ![image](https://github.com/user-attachments/assets/fdafac64-3cde-4b5e-a884-0318a2c7d04a) https://fr.wikipedia.org/wiki/Relation_de_Steinhart-Hart
 Cette page wikipédia fournit un code python permettant à partir de 3 mesures de référence de déterminer vos coefficients.
@@ -19,6 +19,10 @@ Pour mon anneau :
 
 
 A vérifier avec votre matériel.
+
+> [!IMPORTANT]
+> Le montage produit de la chaleur et donc, le BME280 mis à l'intérieur du boitier risque d'avoir ses mesures de température et d'huumidité faussées.
+> Je conseille de le déporter avec un cablage à l'extérieur et loin d'une source de chaleur
 
 La régulation est faite avec un aservissement PID fournissant une sortie PMW afin d'attaquer un module MOSFET pour faire varier la puissance de chauffe de la résistance de l'anneau.
 Les paramètres de l'asservissement PID sont à renseigner dans celle lige de code :
